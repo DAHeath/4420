@@ -2,3 +2,5 @@ http://it.toolbox.com/blogs/enterprise-solutions/affinity-analysis-14726
 affinity analysis, how do you group things that people rate
 http://scikit-learn.org/stable/auto_examples/document_clustering.html
 Text clustering and python source code
+http://maltcms.sourceforge.net/developers/api/maltcms-1.0/maltcms/commands/fragments/cluster/AffinityPropagationAlgorithm.html
+Affinity Propagation Algorithm Java source code
