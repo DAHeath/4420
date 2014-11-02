@@ -93,6 +93,26 @@ for (var i = 0; i < employees.length; i++) {
  */
 var clustering = clusterfck.kmeans(allAffinities, 3);
 
+function convert(input, rootName) {
+  if (Array.isArray(input)) {
+    return {
+      "canonical": rootName, "children": input.map(convert)
+    };
+  }
+  else {
+    ['left', 'right'].forEach(function(side) {
+      if (input[side]) {
+        input.children = input.children || [];
+        input.children.push(convert(input[side]));
+        delete input[side];
+      }
+    });
+    return input;
+  }
+}
+
+console.log(clusterfck.hcluster(allAffinities), "Employees");
+console.log(convert([clusterfck.hcluster(allAffinities)], "Employees"));
 
 /**
  * Translate the ugly clustering result into a clustering of employee names.
@@ -106,4 +126,27 @@ for (var i = 0; i < clustering.length; i++) {
   translation.push(names);
 }
 
+console.log(clustering);
 console.log(translation);
+
+function distance(arr1, arr2) {
+  var sum = 0;
+  for (var i = 0; i < arr1.length; i++) {
+    sum += ((arr1[i] - arr2[i]) * (arr1[i] - arr2[i]));
+  }
+  return Math.sqrt(sum);
+}
+
+function distancesFromItems1And2(locations) {
+  var distances = [];
+  for (var i = 0; i < allAffinities.length; i++) {
+    var position = []
+    position.push(distance(locations[0], locations[i]));
+    position.push(distance(locations[1], locations[i]));
+    distances.push(position);
+  }
+  return distances;
+}
+
+console.log(distancesFromItems1And2(allAffinities));
+
