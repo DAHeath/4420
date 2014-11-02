@@ -63,8 +63,8 @@ NamedSet.getAllAffinities = function(setOfNamedSets) {
   return allAffinities;
 }
 
-NamedSet.nameClustering = function(setOfNamedSets) {
-  var clustering  = NamedSet.affinityClustering(setOfNamedSets);
+NamedSet.nameClustering = function(setOfNamedSets, numClusters) {
+  var clustering  = NamedSet.affinityClustering(setOfNamedSets, numClusters);
   var affinityMap = NamedSet.mapAffinitiesToNames(setOfNamedSets);
   var translation = [];
   var i, j, names;
@@ -78,9 +78,9 @@ NamedSet.nameClustering = function(setOfNamedSets) {
   return translation;
 }
 
-NamedSet.affinityClustering = function(setOfNamedSets) {
+NamedSet.affinityClustering = function(setOfNamedSets, numClusters) {
   var allAffinities = NamedSet.getAllAffinities(setOfNamedSets);
-  return clusterfck.kmeans(allAffinities, 3);
+  return clusterfck.kmeans(allAffinities, numClusters);
 }
 
 module.exports = NamedSet;

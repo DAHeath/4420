@@ -17,13 +17,18 @@ exports.calculate = function(arr1, arr2) {
  *
  * The choice of using the first two points to compare to is entirely arbitrary.
  */
-exports.relativeToFirstTwoItems = function(items) {
-  var distances = [], i, position;
+exports.relativeToFirstTwoItems = function(item, items) {
+  var position = [];
+  position.push(exports.calculate(items[0], item));
+  position.push(exports.calculate(items[1], item));
+  return position;
+};
+
+exports.allDistancesToFirstTwoItems = function(items) {
+  var distances = [], i, d;
   for (i = 0; i < items.length; i++) {
-    position = [];
-    position.push(exports.calculate(items[0], items[i]));
-    position.push(exports.calculate(items[1], items[i]));
-    distances.push(position);
+    d = exports.relativeToFirstTwoItems(items[i], items);
+    distances.push(d);
   }
   return distances;
 };
