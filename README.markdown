@@ -9,8 +9,8 @@ based on the number of these characteristics that they share
 4. Calculate the distance between the affinities of each employee and employees
 1 and 2  
 (chosen arbitrarily)
-5. Plot the employees against the distances (distance to employee 1 is x,
-distance to employee 2 is y)
+5. Plot the employees against the distances  
+(distance to employee 1 is x, distance to employee 2 is y)
 6. Cluster the employees by their lists of affinities  
 (using k-means)
 7. Color the points based on the clustering
