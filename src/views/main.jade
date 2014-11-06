@@ -1,0 +1,20 @@
+doctype html
+html(lang="en")
+  head
+    title= pageTitle
+    style(type='text/css').
+      canvas {
+        border: 1px solid black;
+      }
+  body
+    canvas#draw
+    p #{printout}
+    script(type='text/javascript').
+      var canvas = document.getElementById('draw');
+      canvas.setAttribute('width', '500');
+      canvas.setAttribute('height', '500');
+      if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ff0000'
+        #{canvasContent}
+      }
