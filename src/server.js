@@ -28,9 +28,9 @@ function clusteringToCanvasContent(unclusteredAffinities, clustering) {
   return content;
 }
 
-function getClusterContent(employees, num) {
-  var allAffinities = NamedSet.getAllAffinities(employees);
-  var clustering = NamedSet.affinityClustering(employees, num);
+function getClusterContent(dataSet, num) {
+  var allAffinities = NamedSet.getAllAffinities(dataSet);
+  var clustering = NamedSet.affinityClustering(dataSet, num);
   return clusteringToCanvasContent(allAffinities, clustering);
 }
 
@@ -47,7 +47,7 @@ function printClustering(clustering) {
  * Start up the server using a list of named sets to populate the clustering
  * chart.
  */
-exports.execute = function(employees) {
+exports.execute = function(dataSet) {
   var express = require('express');
   var app = express();
   app.set('views', __dirname + '/views');
@@ -55,15 +55,15 @@ exports.execute = function(employees) {
 
   app.get('/', function (req, res) {
     res.render('main',
-      { canvasContent: getClusterContent(employees, 3)
-      , printout: printClustering(NamedSet.nameClustering(employees, 3))
+      { canvasContent: getClusterContent(dataSet, 3)
+      , printout: printClustering(NamedSet.nameClustering(dataSet, 3))
       });
   });
 
   app.get('/:id', function(req, res) {
     res.render('main',
-      { canvasContent: getClusterContent(employees, req.params.id)
-      , printout: printClustering(NamedSet.nameClustering(employees, req.params.id))
+      { canvasContent: getClusterContent(dataSet, req.params.id)
+      , printout: printClustering(NamedSet.nameClustering(dataSet, req.params.id))
       });
   });
 

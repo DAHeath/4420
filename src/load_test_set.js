@@ -4,13 +4,23 @@ var db = mongoose.connection;
 
 var employeeSchema = mongoose.Schema({
   name: String,
-  projects: [String]
+  projects: [String],
+  manager: [String]
 });
 
 var Employee = mongoose.model('Employee', employeeSchema);
 
-var employees = [ new Employee({name: 'A', projects: ['a', 'c']})
-                , new Employee({name: 'B', projects: ['a', 'd', 'e']})
+Employee.remove ({}, function(err) {
+  console.log('collection removed');
+  console.log(err);
+});
+
+var employees = [ new Employee({ name: 'A'
+                               , projects: ['a', 'c']
+                               , manager: ['Fred']})
+                , new Employee({ name: 'B'
+                               , projects: ['a', 'd', 'e']
+                               , manager: ['George']})
                 ];
 
 // var employees = [ new NamedSet('A', ['a', 'c'])
