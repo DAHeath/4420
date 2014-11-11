@@ -1,21 +1,17 @@
 var mongoose = require('mongoose');
-var NamedSet = require("./named_set");
+var NamedSet = require('./named_set');
 
-mongoose.connect('mongodb://localhost/test');
-
-var employeeSchema = mongoose.Schema({
-  name: String,
-  projects: [String]
-});
-
-var Employee = mongoose.model('Employee', employeeSchema);
-var employees;
+var Database = function(cfg) {
+  mongoose.connect(cfg.getDatabaseLocation());
+  var schema = mongoose.Schema(cfg.schema());
+  this.Employee = mongoose.model(cfg.getTableName(), schema);
+};
 
 /**
  * Send the named sets found in the database to the callback function.
  */
-function sendEmployeesTo(callback) {
-  Employee.find(function (err, emps) {
+Database.prototype.sendDataTo = function(callback) {
+  this.Employee.find(function (err, emps) {
     if (err) { console.error(err); }
     else {
       var namedSets = [];
@@ -26,7 +22,7 @@ function sendEmployeesTo(callback) {
       callback(namedSets);
     }
   });
-}
+};
 
 /**
  * Open the database, get the required documents, then feed those named sets to
@@ -34,11 +30,13 @@ function sendEmployeesTo(callback) {
  *
  * The callback function must take a list of named sets as an argument.
  */
-exports.openThen = function(callback) {
+Database.prototype.openThen = function(callback) {
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
+  var self = this;
   db.once('open', function cb () {
-    sendEmployeesTo(callback);
+    self.sendDataTo(callback);
   });
 };
 
+module.exports = Database;

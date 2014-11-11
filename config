@@ -1,0 +1,6 @@
+database_location: mongodb://localhost/test
+
+table: Employee
+
+property: projects, weight: 1
+# property: manager, weight: 2

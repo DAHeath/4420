@@ -1,7 +1,13 @@
 var server   = require('./server');
-var database = require('./database');
+var Database = require('./database');
+var Config   = require('./config_reader');
 
 /**
  * Start the server with the information from the database.
  */
-database.openThen(server.execute);
+function start(cfg) {
+  var database = new Database(cfg);
+  database.openThen(server.execute);
+}
+
+Config.readThen(start);

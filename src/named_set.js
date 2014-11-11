@@ -7,21 +7,21 @@ var clusterfck = require("clusterfck");
 var NamedSet = function(name, set) {
   this.name = name;
   this.set = set;
-}
+};
 
 /**
  * Get the name of the set.
  */
 NamedSet.prototype.name = function() {
   return this.name;
-}
+};
 
 /**
  * Get the underlying list.
  */
 NamedSet.prototype.set = function() {
   return this.set;
-}
+};
 
 /**
  * Calculate the affinity factors between this named set and the list of other
@@ -47,7 +47,7 @@ NamedSet.mapAffinitiesToNames = function(setOfNamedSets) {
     affinityMap[afs] = setOfNamedSets[i].name;
   }
   return affinityMap;
-}
+};
 
 /**
  * Given a set of named sets, generate a list of affinity lists from each set
@@ -61,7 +61,7 @@ NamedSet.getAllAffinities = function(setOfNamedSets) {
     allAffinities.push(afs);
   }
   return allAffinities;
-}
+};
 
 NamedSet.nameClustering = function(setOfNamedSets, numClusters) {
   var clustering  = NamedSet.affinityClustering(setOfNamedSets, numClusters);
@@ -76,11 +76,11 @@ NamedSet.nameClustering = function(setOfNamedSets, numClusters) {
     translation.push(names);
   }
   return translation;
-}
+};
 
 NamedSet.affinityClustering = function(setOfNamedSets, numClusters) {
   var allAffinities = NamedSet.getAllAffinities(setOfNamedSets);
   return clusterfck.kmeans(allAffinities, numClusters);
-}
+};
 
 module.exports = NamedSet;
