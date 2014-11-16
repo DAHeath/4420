@@ -4,9 +4,10 @@ var clusterfck = require("clusterfck");
 /**
  * A named set is a list with a name.
  */
-var NamedSet = function(name, set) {
+var NamedSet = function(name) {
   this.name = name;
-  this.set = set;
+  this.sets = [];
+  this.weights = [];
 };
 
 /**
@@ -20,7 +21,12 @@ NamedSet.prototype.name = function() {
  * Get the underlying list.
  */
 NamedSet.prototype.set = function() {
-  return this.set;
+  return this.sets[0];
+};
+
+NamedSet.prototype.addSet = function(newSet, weight) {
+  this.sets.push(newSet);
+  this.weights.push(weight);
 };
 
 /**
@@ -28,11 +34,37 @@ NamedSet.prototype.set = function() {
  * named sets.
  */
 NamedSet.prototype.affinityFactors = function(otherNamedSets) {
-  var otherSets = [], i;
-  for (i = 0; i < otherNamedSets.length; i++) {
-    otherSets.push(otherNamedSets[i].set);
+  var otherSets = [], i, j;
+  var af, affinities = [];
+
+  for (j = 0; j < this.sets.length; j++) {
+    otherSets = [];
+    for (i = 0; i < otherNamedSets.length; i++) {
+      otherSets.push(otherNamedSets[i].sets[j]);
+    }
+    af = affinity.allAffinities(this.sets[j], otherSets);
+    affinities.push(af);
   }
-  return affinity.allAffinities(this.set, otherSets);
+
+  var waf, weightedAffinities = [];
+  for (i = 0; i < this.weights.length; i++) {
+    waf = [];
+    for (j = 0; j < affinities[i].length; j++) {
+      waf.push(affinities[i][j] * this.weights[i]);
+    }
+    weightedAffinities.push(waf);
+  }
+
+  var res = [];
+  var sum;
+  for (j = 0; j < weightedAffinities[0].length; j++) {
+    sum = 0;
+    for (i = 0; i < weightedAffinities.length; i++) {
+      sum += weightedAffinities[i][j];
+    }
+    res.push(sum);
+  }
+  return res;
 };
 
 /**

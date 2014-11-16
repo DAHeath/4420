@@ -1,0 +1,2 @@
+NamedSet, change the way affinity analysis is done to account for weight and
+multiple parameters

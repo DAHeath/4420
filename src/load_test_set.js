@@ -10,10 +10,6 @@ var employeeSchema = mongoose.Schema({
 
 var Employee = mongoose.model('Employee', employeeSchema);
 
-Employee.remove ({}, function(err) {
-  console.log('collection removed');
-  console.log(err);
-});
 
 var employees = [ new Employee({ name: 'A'
                                , projects: ['a', 'c']
@@ -36,13 +32,22 @@ var employees = [ new Employee({ name: 'A'
 function insertEmployees() {
   var i;
   for (i = 0; i < employees.length; i++) {
-    employees[i].save();
+    employees[i].save(function(err) {
+      if (err) { console.log(err); }
+      else { console.log('saved emp'); }
+    });
   }
 }
 
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback () {
-  insertEmployees();
-  console.log('success!');
+  Employee.remove ({}, function(err) {
+    if (err) { console.log(err); }
+    else {
+      console.log('collection removed');
+      insertEmployees();
+      console.log('success!');
+    }
+  });
 });

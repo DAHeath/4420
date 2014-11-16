@@ -60,10 +60,10 @@ exports.execute = function(dataSet) {
       });
   });
 
-  app.get('/:id', function(req, res) {
+  app.get('/:num', function(req, res) {
     res.render('main',
-      { canvasContent: getClusterContent(dataSet, req.params.id)
-      , printout: printClustering(NamedSet.nameClustering(dataSet, req.params.id))
+      { canvasContent: getClusterContent(dataSet, req.params.num)
+      , printout: printClustering(NamedSet.nameClustering(dataSet, req.params.num))
       });
   });
 

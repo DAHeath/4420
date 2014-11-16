@@ -5,21 +5,29 @@ var Database = function(cfg) {
   mongoose.connect(cfg.getDatabaseLocation());
   var schema = mongoose.Schema(cfg.schema());
   this.Model = mongoose.model(cfg.getTableName(), schema);
+  this.cfg = cfg;
 };
 
 /**
  * Send the named sets found in the database to the callback function.
  */
 Database.prototype.sendDataTo = function(callback) {
+  var self = this;
   this.Model.find(function (err, models) {
     if (err) { console.error(err); }
     else {
       var namedSets = [];
-      var i;
+      var i, j;
+      var newSet, data, weight;
       for (i = 0; i < models.length; i++) {
-        namedSets.push(new NamedSet(models[i].name, models[i].projects));
+        newSet = new NamedSet(models[i].name);
+        for (j = 0; j < self.cfg.getProperties().length; j++) {
+          data = models[i][self.cfg.getProperties()[j].getProperty()];
+          weight = self.cfg.getProperties()[j].getWeight();
+          newSet.addSet(data, weight);
+        }
+        namedSets.push(newSet);
       }
-      // Todo change this to no longer reference projects
       callback(namedSets);
     }
   });
