@@ -1,20 +1,16 @@
 doctype html
 html(lang="en")
   head
-    title= pageTitle
     style(type='text/css').
-      canvas {
-        border: 1px solid black;
+      div {
+        position: absolute;
+        border-radius: 8px;
+        -moz-border-radius: 8px;
+        -webkit-border-radius: 8px;
+        width: 16px;
+        height: 16px;
       }
   body
-    canvas#draw
-    p #{printout}
-    script(type='text/javascript').
-      var canvas = document.getElementById('draw');
-      canvas.setAttribute('width', '800');
-      canvas.setAttribute('height', '800');
-      if (canvas.getContext) {
-        var ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#ff0000'
-        #{canvasContent}
-      }
+    each val in canvasContent
+      div(title='#{val.name}' \
+      style='background-color: #{val.color}; top: #{val.top}px; left: #{val.left}px')

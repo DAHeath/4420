@@ -1,6 +1,7 @@
 var numClusters = process.argv[2];
 var NamedSet = require("./named_set");
 var distance = require("./distance");
+var fs = require('fs');
 
 var colors = [ '#ff0000'
              , '#00ff00'
@@ -11,30 +12,31 @@ var colors = [ '#ff0000'
              , '#00ffff'
              ];
 
-function clusteredDistances(unclusteredAffinities, clustering) {
+function clusteredDistances(nameMapping, unclusteredAffinities, clustering) {
   var clusteredDists = [];
   var dists;
   var i, j;
   for (i = 0; i < clustering.length; i++) {
     dists = [];
     for (j = 0; j < clustering[i].length; j++) {
-      dists.push(distance.relativeToFirstTwoItems(
-            clustering[i][j], unclusteredAffinities));
+      dists.push({ name: nameMapping[clustering[i][j]],
+                   dist: distance.relativeToFirstTwoItems(
+            clustering[i][j], unclusteredAffinities) });
     }
     clusteredDists.push(dists);
   }
   return clusteredDists;
 }
 
-function scaleFactor(unclusteredAffinities, clustering) {
-  var dists = clusteredDistances(unclusteredAffinities, clustering);
+function scaleFactor(nameMapping, unclusteredAffinities, clustering) {
+  var dists = clusteredDistances(nameMapping, unclusteredAffinities, clustering);
   var max = -1;
   var i, j, k;
   for (i = 0; i < dists.length; i++) {
     for (j = 0; j < dists[i].length; j++) {
-      for (k = 0; k < dists[i][j].length; k++) {
-        if (dists[i][j][k] > max) {
-          max = dists[i][j][k];
+      for (k = 0; k < dists[i][j].dist.length; k++) {
+        if (dists[i][j].dist[k] > max) {
+          max = dists[i][j].dist[k];
         }
       }
     }
@@ -42,18 +44,19 @@ function scaleFactor(unclusteredAffinities, clustering) {
   return 700/max;
 }
 
-function clusteringToCanvasContent(unclusteredAffinities, clustering) {
-  var content = "";
+function clusteringToCanvasContent(nameMapping, unclusteredAffinities, clustering) {
+  var content = [];
   var i, j;
-  var dists = clusteredDistances(unclusteredAffinities, clustering);
-  var sf = scaleFactor(unclusteredAffinities, clustering);
+  var dists = clusteredDistances(nameMapping, unclusteredAffinities, clustering);
+  var sf = scaleFactor(nameMapping, unclusteredAffinities, clustering);
 
   for (i = 0; i < dists.length; i++) {
-    content += "ctx.fillStyle = '" + colors[i] + "';\n";
     for(j = 0; j < dists[i].length; j++) {
-      content += "ctx.fillRect(" +
-        dists[i][j][0]*sf + ", " +
-        dists[i][j][1]*sf + ", 9, 9);\n";
+      content.push(
+          { name:  dists[i][j].name,
+            left:  dists[i][j].dist[0]*sf,
+            top:   dists[i][j].dist[1]*sf,
+            color: colors[i] });
     }
   }
   return content;
@@ -62,7 +65,8 @@ function clusteringToCanvasContent(unclusteredAffinities, clustering) {
 function getClusterContent(dataSet, num) {
   var allAffinities = NamedSet.getAllAffinities(dataSet);
   var clustering = NamedSet.affinityClustering(dataSet, num);
-  return clusteringToCanvasContent(allAffinities, clustering);
+  var nameMapping = NamedSet.mapAffinitiesToNames(dataSet);
+  return clusteringToCanvasContent(nameMapping, allAffinities, clustering);
 }
 
 function printClustering(clustering) {
