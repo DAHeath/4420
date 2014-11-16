@@ -11,18 +11,49 @@ var colors = [ '#ff0000'
              , '#00ffff'
              ];
 
+function clusteredDistances(unclusteredAffinities, clustering) {
+  var clusteredDists = [];
+  var dists;
+  var i, j;
+  for (i = 0; i < clustering.length; i++) {
+    dists = [];
+    for (j = 0; j < clustering[i].length; j++) {
+      dists.push(distance.relativeToFirstTwoItems(
+            clustering[i][j], unclusteredAffinities));
+    }
+    clusteredDists.push(dists);
+  }
+  return clusteredDists;
+}
+
+function scaleFactor(unclusteredAffinities, clustering) {
+  var dists = clusteredDistances(unclusteredAffinities, clustering);
+  var max = -1;
+  var i, j, k;
+  for (i = 0; i < dists.length; i++) {
+    for (j = 0; j < dists[i].length; j++) {
+      for (k = 0; k < dists[i][j].length; k++) {
+        if (dists[i][j][k] > max) {
+          max = dists[i][j][k];
+        }
+      }
+    }
+  }
+  return 700/max;
+}
+
 function clusteringToCanvasContent(unclusteredAffinities, clustering) {
   var content = "";
   var i, j;
-  var position;
-  for (i = 0; i < clustering.length; i++) {
+  var dists = clusteredDistances(unclusteredAffinities, clustering);
+  var sf = scaleFactor(unclusteredAffinities, clustering);
+
+  for (i = 0; i < dists.length; i++) {
     content += "ctx.fillStyle = '" + colors[i] + "';\n";
-    for(j = 0; j < clustering[i].length; j++) {
-      position = distance.relativeToFirstTwoItems(
-          clustering[i][j], unclusteredAffinities);
+    for(j = 0; j < dists[i].length; j++) {
       content += "ctx.fillRect(" +
-        position[0]*200 + ", " +
-        position[1]*200 + ", 9, 9);\n";
+        dists[i][j][0]*sf + ", " +
+        dists[i][j][1]*sf + ", 9, 9);\n";
     }
   }
   return content;
