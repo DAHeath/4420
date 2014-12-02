@@ -9,9 +9,10 @@ if (typeof String.prototype.startsWith !== 'function') {
   };
 }
 
-var WeightedProperty = function(property, weight) {
+var WeightedProperty = function(property, weight, type) {
   this.property = property;
   this.weight = weight;
+  this.type = type;
 };
 
 WeightedProperty.prototype.getProperty = function() {
@@ -22,12 +23,22 @@ WeightedProperty.prototype.getWeight = function() {
   return this.weight;
 };
 
+WeightedProperty.prototype.getType = function() {
+  return this.type;
+};
+
+function parseType(s) {
+  if (s === "String") { return String; }
+  if (s === "[String]") { return [String] }
+}
+
 WeightedProperty.build = function(line) {
   var aboutComma = line.split(', ');
   if (!aboutComma[0].startsWith('property')) { throw "bad property"; }
   var name = aboutComma[0].afterColon();
   var weight = parseFloat(aboutComma[1].afterColon());
-  return new WeightedProperty(name, weight);
+  var type = parseType(aboutComma[2].afterColon());
+  return new WeightedProperty(name, weight, type);
 };
 
 var Config = function() {
@@ -50,6 +61,14 @@ Config.prototype.getTableName = function() {
   return this.table;
 };
 
+Config.prototype.setName = function(name) {
+  this.name = name;
+};
+
+Config.prototype.getName = function() {
+  return this.name;
+};
+
 Config.prototype.addProperty = function(property) {
   this.properties.push(property);
 };
@@ -59,10 +78,12 @@ Config.prototype.getProperties = function() {
 };
 
 Config.prototype.schema = function() {
-  var schema = {'name': String};
+  var n = this.getName();
+  var schema = {};
+  schema[n] = String;
   var i;
   for (i = 0; i < this.properties.length; i++) {
-    schema[this.properties[i].getProperty()] = [String];
+    schema[this.properties[i].getProperty()] = this.properties[i].getType();
   }
   return schema;
 };
@@ -77,6 +98,8 @@ Config.build = function(lines) {
       cfg.setTableName(lines[i].afterColon());
     } else if (lines[i].startsWith('property')) {
       cfg.addProperty(WeightedProperty.build(lines[i]));
+    } else if (lines[i].startsWith('name')) {
+      cfg.setName(lines[i].afterColon());
     }
   }
   return cfg;

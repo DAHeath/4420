@@ -17,17 +17,22 @@ var employees = [ new Employee({ name: 'A'
                 , new Employee({ name: 'B'
                                , projects: ['a', 'd', 'e']
                                , manager: ['George']})
+                , new Employee({ name: 'C'
+                               , projects: ['b', 'c', 'f']
+                               , manager: ['Fred']})
+                , new Employee({ name: 'D'
+                               , projects: ['b', 'f']
+                               , manager: ['George']})
+                , new Employee({ name: 'E'
+                               , projects: ['d', 'f']
+                               , manager: ['Frank']})
+                , new Employee({ name: 'F'
+                               , projects: ['a', 'd']
+                               , manager: ['Frank']})
+                , new Employee({ name: 'G'
+                               , projects: ['c', 'd']
+                               , manager: ['Frank']})
                 ];
-
-// var employees = [ new NamedSet('A', ['a', 'c'])
-//                 , new NamedSet('B', ['a', 'd', 'e'])
-//                 , new NamedSet('C', ['b', 'c', 'f'])
-//                 , new NamedSet('D', ['b', 'f'])
-//                 , new NamedSet('E', ['d', 'f'])
-//                 , new NamedSet('F', ['a', 'd'])
-//                 , new NamedSet('G', ['c', 'd'])
-//                 ];
-
 
 function insertEmployees() {
   var i;

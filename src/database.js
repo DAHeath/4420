@@ -3,7 +3,7 @@ var NamedSet = require('./named_set');
 
 var Database = function(cfg) {
   mongoose.connect(cfg.getDatabaseLocation());
-  var schema = mongoose.Schema(cfg.schema());
+  var schema = mongoose.Schema(cfg.schema(), {collection: cfg.getTableName()});
   this.Model = mongoose.model(cfg.getTableName(), schema);
   this.cfg = cfg;
 };
@@ -20,7 +20,7 @@ Database.prototype.sendDataTo = function(callback) {
       var i, j;
       var newSet, data, weight;
       for (i = 0; i < models.length; i++) {
-        newSet = new NamedSet(models[i].name);
+        newSet = new NamedSet(models[i][self.cfg.getName()]);
         for (j = 0; j < self.cfg.getProperties().length; j++) {
           data = models[i][self.cfg.getProperties()[j].getProperty()];
           weight = self.cfg.getProperties()[j].getWeight();
@@ -33,7 +33,7 @@ Database.prototype.sendDataTo = function(callback) {
   });
 };
 
-/**
+/*
  * Open the database, get the required documents, then feed those named sets to
  * the callback function.
  *
@@ -43,7 +43,7 @@ Database.prototype.openThen = function(callback) {
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   var self = this;
-  db.once('open', function cb () {
+  db.once('open', function() {
     self.sendDataTo(callback);
   });
 };

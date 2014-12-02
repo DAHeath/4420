@@ -1,6 +1,6 @@
-database_location: mongodb://localhost/test
+database_location: mongodb://4420admin:4420admin@ds049180.mongolab.com:49180/4420mongolab
 
-table: Employee
-
-property: projects, weight: 1
-property: manager, weight: 0.5
+table: congress
+name: Party
+property: Voting Record & Motion, weight: 1, type: String
+# property: Party, weight: .5, type: String

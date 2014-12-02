@@ -63,10 +63,18 @@ function clusteringToCanvasContent(nameMapping, unclusteredAffinities, clusterin
 }
 
 function getClusterContent(dataSet, num) {
+  var startTime = new Date().getTime();
+
   var allAffinities = NamedSet.getAllAffinities(dataSet);
   var clustering = NamedSet.affinityClustering(dataSet, num);
   var nameMapping = NamedSet.mapAffinitiesToNames(dataSet);
-  return clusteringToCanvasContent(nameMapping, allAffinities, clustering);
+  var temp = clusteringToCanvasContent(nameMapping, allAffinities, clustering);
+
+  var endTime = new Date().getTime();
+
+  console.log('Execution Time: ' + (endTime - startTime));
+
+  return temp;
 }
 
 function printClustering(clustering) {

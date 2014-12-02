@@ -25,7 +25,12 @@ NamedSet.prototype.set = function() {
 };
 
 NamedSet.prototype.addSet = function(newSet, weight) {
-  this.sets.push(newSet);
+  if (typeof newSet === 'string' || newSet instanceof string) {
+    console.log(newSet.split(','));
+    this.sets.push(newSet.split(','));
+  } else {
+    this.sets.push(newSet);
+  }
   this.weights.push(weight);
 };
 

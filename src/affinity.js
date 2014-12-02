@@ -9,13 +9,17 @@ var intersection = require("./intersection");
  * If the number of things that the first has is 0, there will be divide by
  * zero problems.
  */
-exports.affinityFactor = function(numberIn1, numberShared) {
-  return numberShared/numberIn1;
+exports.affinityFactor = function(numTotal, numShared) {
+  return numShared/numTotal;
 };
 
 
 function numCommon(arr1, arr2) {
   return intersection.safe(arr1, arr2).length;
+}
+
+function numTotal(arr1, arr2) {
+  return intersection.union(arr1, arr2).length;
 }
 
 /**

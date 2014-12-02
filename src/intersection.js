@@ -25,3 +25,20 @@ exports.safe = function(a, b) {
   }
   return result;
 };
+
+exports.union = function(x, y) {
+  var obj = {};
+  var i;
+  for (i = x.length-1; i >= 0; -- i) {
+    obj[x[i]] = x[i];
+  }
+  for (i = y.length-1; i >= 0; -- i) {
+    obj[y[i]] = y[i];
+  }
+  var res = [];
+  for (i in obj) {
+    res.push(obj[i]);
+  }
+  return res;
+};
+
