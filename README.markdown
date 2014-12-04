@@ -1,17 +1,11 @@
-# Steps to Clustering Employees
-
-1. Choose a characteristic that all employees they have (say, the projects that
-they have worked on)
-2. Make a query to the mongo database on this characteristic
-3. Perform an affinity analysis on each employee against every other employee
-based on the number of these characteristics that they share  
-(i.e. if I have 10 projects and share 2 with you, my affinity to you is .2)
-4. Calculate the distance between the affinities of each employee and employees
-1 and 2  
-(chosen arbitrarily)
-5. Plot the employees against the distances  
-(distance to employee 1 is x, distance to employee 2 is y)
-6. Cluster the employees by their lists of affinities  
-(using k-means)
-7. Color the points based on the clustering
-8. Somehow output this as an html file with the drawings added
+# Steps to Using Clustering Tool
+1. Install [Node JS](http://www.nodejs.org/)
+2. Install [Mongo](http://www.mongodb.org/)
+3. Fill in config file:
+  a. Specify database location
+  b. Specify name of table
+  c. Specify property to show as name of entity
+  d. Specify properties to cluster by, and their weight
+4. Run server: node src/main.js
+5. Navigate to [running server](localhost:3000)
+6. Specify different numbers of clusters: e.g. [localhost:3000/5](localhost:3000/5)
