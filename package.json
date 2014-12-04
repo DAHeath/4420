@@ -1,0 +1,13 @@
+{
+  "name": "Clustering",
+  "version": "0.1.0",
+  "dependencies": {
+    "express": "*",
+    "jade": "*",
+    "mongoose": "*",
+    "clusterfck": "*"
+  },
+  "engines": {
+    "node": "*"
+  }
+}
